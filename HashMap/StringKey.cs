@@ -27,6 +27,8 @@ namespace HashMap
 {
     class StringKey : IComparable<StringKey>
     {
+        const string STUDENT = "Matt Scott 0286401";
+
         private string keyName;
         private static double COEFFICIENT = 31;
 
@@ -68,7 +70,7 @@ namespace HashMap
                 return true;
             }
             
-            if(o == null || this.GetType() != o.GetType())
+            if(o == null || GetType() != o.GetType())
             {
                 return false;
             }

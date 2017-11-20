@@ -27,6 +27,8 @@ namespace HashMap
 {
     class Item : IComparable<Item>
     {
+        const string STUDENT = "Matt Scott 0286401";
+
         private string name;
         private int goldPieces;
         private double weight;
