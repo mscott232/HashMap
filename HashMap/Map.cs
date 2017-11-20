@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace HashMap
 {
-    interface Map<K, V>
+    interface IMap<K, V>
     {
         /// <summary>
         /// Return how many entries are actually used
