@@ -68,13 +68,13 @@ namespace HashMap
         /**
          * Method to test GetHashCode() that proper int is returned
          */
-        [Test]
-        public void TestGetHashCode()
-        {
-            StringKey stringKey = new StringKey("stop");
+            [Test]
+            public void TestGetHashCode()
+            {
+                StringKey stringKey = new StringKey("stop");
 
-            Assert.That(stringKey.GetHashCode(), Is.EqualTo(3446974));
-        }
+                Assert.That(stringKey.GetHashCode(), Is.EqualTo(3446974));
+            }
 
         /**
          * Method to test Equals() returns true when the 2 StringKeys are the same

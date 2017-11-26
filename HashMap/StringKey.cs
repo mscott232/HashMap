@@ -55,7 +55,7 @@ namespace HashMap
                 result += (asciiBytes[i] * (int)Math.Pow(COEFFICIENT, i));
             }
 
-            return result;
+            return Math.Abs(result);
         }
 
         /// <summary>

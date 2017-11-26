@@ -89,7 +89,7 @@ namespace HashMap
         /// <returns>-1 if other is greater, 0 if equal, 1 if this is greater</returns>
         public int CompareTo(Item other)
         {
-            return goldPieces.CompareTo(other.GetGoldPieces());
+            return name.CompareTo(other.GetName());
         }
     }
 }

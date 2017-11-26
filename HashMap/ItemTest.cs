@@ -130,7 +130,7 @@ namespace HashMap
         public void TestCompareTo_Zero()
         {
             Item item1 = new Item("test1", 1, 1);
-            Item item2 = new Item("test2", 1, 1);
+            Item item2 = new Item("test1", 1, 1);
 
             Assert.That(item1.CompareTo(item2), Is.EqualTo(0));
         }
@@ -141,8 +141,8 @@ namespace HashMap
         [Test]
         public void TestCompareTo_One()
         {
-            Item item1 = new Item("test1", 2, 2);
-            Item item2 = new Item("test2", 1, 1);
+            Item item1 = new Item("test2", 2, 2);
+            Item item2 = new Item("test1", 1, 1);
 
             Assert.That(item1.CompareTo(item2), Is.EqualTo(1));
         }
