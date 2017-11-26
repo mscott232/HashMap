@@ -70,12 +70,12 @@ namespace HashMap
         /// Returns an IEnumerable of all the keys in the map
         /// </summary>
         /// <returns>An IEnumerable of all keys</returns>
-        IEnumerable Keys();
+        IEnumerator Keys();
 
         /// <summary>
         /// Returns an IEnumerable of all the values in the map
         /// </summary>
         /// <returns>An IEnumerable of all values</returns>
-        IEnumerable Values();
+        IEnumerator Values();
     }
 }
