@@ -82,15 +82,19 @@ namespace HashMap
         /// </summary>
         public void Clear()
         {
-            table = null;
             size = 0;
+
+            for(int i = 0; i < table.Length; i++)
+            {
+                table[i] = null;
+            }
         }
 
         /// <summary>
-        /// 
+        /// Returns the value or null with the specified key at it's index
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">The key of the entry</param>
+        /// <returns>The value or null</returns>
         public V Get(K key)
         {
             V valueResult = default(V);
@@ -106,91 +110,97 @@ namespace HashMap
         }
 
         /// <summary>
-        /// 
+        /// Put's the specified key and value into the hash map
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="key">The key to be entered</param>
+        /// <param name="value">The value associated with the key</param>
+        /// <returns>Null or the value of the removed entry</returns>
         public V Put(K key, V value)
         {
             if(key == null || value == null)
             {
-                throw new ArgumentException("Key and Value cannot be null.");
+                throw new ArgumentNullException("Key and Value cannot be null.");
             }
 
-            if(size >= threshold)
+            if(size + 1 >= threshold)
             {
                 Rehash();
             }
 
-            Entry<K, V> entry = new Entry<K, V>(key, value);
-            int hashCode = FindBucket(key);
-            table[hashCode] = entry;
+            V removed = Remove(key);
+
+            table[FindBucket(key)] = new Entry<K, V>(key, value);
 
             size++;
 
-            return entry.GetValue();
+            return removed;
         }
 
         /// <summary>
-        /// 
+        /// Removes an entry from the hash map
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">The key of the item to be removed</param>
+        /// <returns>The value of the entry removed</returns>
         public V Remove(K key)
         {
             V valueResult = default(V);
 
             int keyResult = FindMatchingBucket(key);
 
-            if(keyResult >= 0)
+            if(keyResult != -1)
             {
                 valueResult = table[keyResult].GetValue();
                 table[keyResult] = null;
-            }
 
-            size--;
+                size--;
+            }            
 
             return valueResult;
         }
 
         /// <summary>
-        /// 
+        /// Returns an ienumerable of all the keys in the table
         /// </summary>
-        /// <returns></returns>
-        public IEnumerator Keys()
+        /// <returns>The IEnumerable</returns>
+        public IEnumerable Keys()
         {
             List<K> list = new List<K>();
 
-            foreach(Entry<K, V> entry in table)
+            for(int i = 0; i < table.Length; i++)
             {
-                list.Add(entry.GetKey());
+                if(table[i] != null)
+                {
+                    list.Add(table[i].GetKey());
+                }
             }
 
-            return list.GetEnumerator();
+            return list.AsEnumerable();
         }
 
         /// <summary>
-        /// 
+        /// Returns an IEnumerable of all the values in the table
         /// </summary>
-        /// <returns></returns>
-        public IEnumerator Values()
+        /// <returns>IEnumerable of values</returns>
+        public IEnumerable Values()
         {
             List<V> list = new List<V>();
 
-            foreach (Entry<K, V> entry in table)
+            for (int i = 0; i < table.Length; i++)
             {
-                list.Add(entry.GetValue());
+                if (table[i] != null)
+                {
+                    list.Add(table[i].GetValue());
+                }
             }
 
-            return list.GetEnumerator();
+            return list.AsEnumerable();
         }
 
         /// <summary>
-        /// 
+        /// Finds a bucket with the associated key
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="key">The key to search for</param>
+        /// <returns>Int of the index of the bucket</returns>
         private int FindBucket(K key)
         {
             StringKey stringKey = new StringKey(key.ToString());
@@ -199,27 +209,18 @@ namespace HashMap
         }
 
         /// <summary>
-        /// 
+        /// Finds a bucket matching the passed in key
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The index of the matching bucket or -1 if not found</returns>
         private int FindMatchingBucket(K key)
         {
-            int result = -1;
+            int index = FindBucket(key);
 
-            for(int i = 0; i < table.Length; i++)
-            {
-                if (table[i].GetKey().Equals(key))
-                {
-                    result = i;
-                    break;
-                }
-            }
-
-            return result;
+            return table[index] == null ? -1 : index;
         }
 
         /// <summary>
-        /// 
+        /// Rehashes the table when the size gets near the threshold
         /// </summary>
         private void Rehash()
         {
@@ -227,8 +228,7 @@ namespace HashMap
             size = 0;
             threshold = (int)(newCapacity * loadFactor);
 
-            Entry<K, V>[] tableCopy = new Entry<K, V>[table.Length];
-            table.CopyTo(tableCopy, 0);
+            Entry<K, V>[] tableCopy = table;
 
             table = new Entry<K, V>[newCapacity];
 
@@ -242,9 +242,9 @@ namespace HashMap
         }
 
         /// <summary>
-        /// 
+        /// Determines the new size of the table when rehashing
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Int of the new table capacity</returns>
         private int Resize()
         {
             int newCapacity = (table.Length * 2) + 1;
@@ -275,20 +275,20 @@ namespace HashMap
         }
 
         /// <summary>
-        /// 
+        /// Inner class of entries
         /// </summary>
-        /// <typeparam name="K"></typeparam>
-        /// <typeparam name="V"></typeparam>
+        /// <typeparam name="K">Key of the entry</typeparam>
+        /// <typeparam name="V">Value of the entry</typeparam>
         class Entry<K, V>
         {
             private K key;
             private V value;
 
             /// <summary>
-            /// 
+            /// Entry constructor
             /// </summary>
-            /// <param name="key"></param>
-            /// <param name="value"></param>
+            /// <param name="key">Key of the entry</param>
+            /// <param name="value">Value of the entry</param>
             public Entry(K key, V value)
             {
                 this.key = key;
@@ -296,36 +296,36 @@ namespace HashMap
             }
 
             /// <summary>
-            /// 
+            /// Returns the key of the entry
             /// </summary>
-            /// <returns></returns>
+            /// <returns>The key of the entry</returns>
             public K GetKey()
             {
                 return key;
             }
 
             /// <summary>
-            /// 
+            /// Returns the value of the entry
             /// </summary>
-            /// <returns></returns>
+            /// <returns>The value of the entry</returns>
             public V GetValue()
             {
                 return value;
             }
 
             /// <summary>
-            /// 
+            /// Set's the value of the entry
             /// </summary>
-            /// <param name="value"></param>
+            /// <param name="value">The new value of an entry</param>
             public void SetValue(V value)
             {
                 this.value = value;
             }
 
             /// <summary>
-            /// 
+            /// Overriden ToString() method
             /// </summary>
-            /// <returns></returns>
+            /// <returns>Returns string of the entry</returns>
             public override string ToString()
             {
                 return string.Format("Key: {0}, Value: {1}", key, value);

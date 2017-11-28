@@ -47,12 +47,12 @@ namespace HashMap
         /// <returns>The int hash code</returns>
         public override int GetHashCode()
         {
-            byte[] asciiBytes = Encoding.ASCII.GetBytes(keyName);
+            //byte[] asciiBytes = Encoding.ASCII.GetBytes(keyName);
             int result = 0;
 
-            for(int i = 0; i < asciiBytes.Length; i++)
+            for(int i = 0; i < keyName.Length; i++)
             {
-                result += (asciiBytes[i] * (int)Math.Pow(COEFFICIENT, i));
+                result += (keyName[i] * (int)Math.Pow(COEFFICIENT, i));
             }
 
             return Math.Abs(result);

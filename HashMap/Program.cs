@@ -22,7 +22,19 @@ namespace HashMap
                 Item value = new Item(lineSplit[0].Trim(), int.Parse(lineSplit[1].Trim()), double.Parse(lineSplit[2].Trim()));
 
                 hashMap.Put(key, value);
+            }            
+
+            foreach (StringKey key in hashMap.Keys())
+            {
+                Item item = hashMap.Get(key);
+
+                if(item != null && item.GetGoldPieces() == 0)
+                {
+                    hashMap.Remove(key);
+                }
             }
+
+            Console.ReadKey();
         }
     }
 }
