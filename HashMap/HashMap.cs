@@ -24,7 +24,7 @@ namespace HashMap
         {
             table = new Entry<K, V>[DEFAULT_CAPACITY];
             loadFactor = DEFAULT_LOADFACTOR;
-            threshold = DEFAULT_CAPACITY * (int)DEFAULT_LOADFACTOR;
+            threshold = (int)(DEFAULT_CAPACITY * DEFAULT_LOADFACTOR);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace HashMap
         {
             table = new Entry<K, V>[initialCapacity];
             loadFactor = DEFAULT_LOADFACTOR;
-            threshold = initialCapacity * (int)DEFAULT_LOADFACTOR;
+            threshold = (int)(initialCapacity * DEFAULT_LOADFACTOR);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace HashMap
                 throw new ArgumentException("Load factor has to be between 0 and 1.");
             }
 
-            threshold = initialCapacity * (int)loadFactor;
+            threshold = (int)(initialCapacity * loadFactor);
         }
 
         /// <summary>
@@ -82,11 +82,7 @@ namespace HashMap
         /// </summary>
         public void Clear()
         {
-            for(int i = 0; i < table.Length; i++)
-            {
-                table[i] = null;
-            }
-
+            table = null;
             size = 0;
         }
 
@@ -120,6 +116,11 @@ namespace HashMap
             if(key == null || value == null)
             {
                 throw new ArgumentException("Key and Value cannot be null.");
+            }
+
+            if(size >= threshold)
+            {
+                Rehash();
             }
 
             Entry<K, V> entry = new Entry<K, V>(key, value);
@@ -222,7 +223,22 @@ namespace HashMap
         /// </summary>
         private void Rehash()
         {
-            throw new NotImplementedException();
+            int newCapacity = Resize();
+            size = 0;
+            threshold = (int)(newCapacity * loadFactor);
+
+            Entry<K, V>[] tableCopy = new Entry<K, V>[table.Length];
+            table.CopyTo(tableCopy, 0);
+
+            table = new Entry<K, V>[newCapacity];
+
+            for(int i = 0; i < tableCopy.Length; i++)
+            {
+                if(tableCopy[i] != null)
+                {
+                    Put(tableCopy[i].GetKey(), tableCopy[i].GetValue());
+                }
+            }
         }
 
         /// <summary>
@@ -231,7 +247,31 @@ namespace HashMap
         /// <returns></returns>
         private int Resize()
         {
-            throw new NotImplementedException();
+            int newCapacity = (table.Length * 2) + 1;
+            bool isPrime = false;
+            int squareRoot;
+
+            while(!isPrime)
+            {
+                isPrime = true;
+                squareRoot = (int)Math.Floor(Math.Sqrt(newCapacity));
+
+                for(int i = 3; i <= squareRoot; i++)
+                {
+                    if(newCapacity % i == 0)
+                    {
+                        isPrime = false;
+                        break;
+                    }
+                }
+
+                if(!isPrime)
+                {
+                    newCapacity += 2;
+                }
+            }
+
+            return newCapacity;
         }
 
         /// <summary>
