@@ -34,7 +34,44 @@ namespace HashMap
                 }
             }
 
-            Console.ReadKey();
+            String[] loot = File.ReadAllLines(@"C:\Users\Matt\Documents\School\Term 5\Programming 4\Assignments\Assignment 4\adventureLoot.txt");
+            List<Item> items = new List<Item>();
+            double weight = 0;
+
+            for(int i = 0; i < loot.Length; i++)
+            {
+                bool found = false;
+
+                foreach(StringKey key in hashMap.Keys())
+                {
+                    if(loot[i].Equals(key.ToString()))
+                    {
+                        found = true;
+                        Item foundItem = hashMap.Get(key);
+
+                        if((weight + foundItem.GetWeight()) <= 75)
+                        {
+                            Console.WriteLine("You have picked up a " + loot[i] + "!");
+                            items.Add(foundItem);
+                            weight += foundItem.GetWeight();
+                        }
+                        else
+                        {
+                            Console.WriteLine("You cannot pick up the " + loot[i] + ", you are already carrying " + weight + "KG and it weights " + foundItem.GetWeight() + "KG.");
+                        }
+                        
+                    }
+                }
+
+                if(!found)
+                {
+                    Console.WriteLine("You find an unknown item that is not in your loot table, you leave it alone. " + loot[i]);
+                }
+
+                Console.ReadKey();
+            }
+
+            
         }
     }
 }
