@@ -41,23 +41,25 @@ namespace HashMap
             for(int i = 0; i < loot.Length; i++)
             {
                 bool found = false;
+                bool capacity = false;
 
                 foreach(StringKey key in hashMap.Keys())
                 {
                     if(loot[i].Equals(key.ToString()))
                     {
                         found = true;
-                        Item foundItem = hashMap.Get(key);
+                        Item foundItem = hashMap.Get(key);  
 
                         if((weight + foundItem.GetWeight()) <= 75)
                         {
-                            Console.WriteLine("You have picked up a " + loot[i] + "!");
+                            Console.WriteLine("You have picked up a " + loot[i] + "!");                            
                             items.Add(foundItem);
-                            weight += foundItem.GetWeight();
+                            weight += foundItem.GetWeight();                        
                         }
                         else
                         {
                             Console.WriteLine("You cannot pick up the " + loot[i] + ", you are already carrying " + weight + "KG and it weights " + foundItem.GetWeight() + "KG.");
+                            capacity = true;
                         }
                         
                     }
@@ -68,10 +70,32 @@ namespace HashMap
                     Console.WriteLine("You find an unknown item that is not in your loot table, you leave it alone. " + loot[i]);
                 }
 
-                Console.ReadKey();
-            }
+                if(capacity)
+                {
+                    int total = 0;
 
+                    Console.WriteLine("You must sell the following items:");
+
+                    foreach(Item item in items.ToList())
+                    {
+                        int itemQuantity = items.Where(x => x.GetName() == item.GetName()).Count();
+
+                        if (itemQuantity > 0)
+                        {
+                            Console.WriteLine(string.Format("{0} - Quantity: {1} - Subtotal: {2}GP", item.ToString(), itemQuantity, item.GetGoldPieces() * itemQuantity));
+                            total += (item.GetGoldPieces() * itemQuantity);
+                        }
+
+                        items.RemoveAll(x => x.GetName().Equals(item.GetName()));
+                    }
+
+                    Console.WriteLine("Total value of sold items: " + total + "GP");
+
+                    items = new List<Item>();
+                }                
+            }
             
+            Console.ReadKey();
         }
     }
 }
