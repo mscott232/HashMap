@@ -1,4 +1,23 @@
-﻿using System;
+﻿/**
+* Program – Main class
+*
+* <pre>
+*
+* Assignment: #4
+* Course: ADEV-3001
+* Date Created: November 27, 2017
+* 
+* Revision Log
+* Who        When       Reason
+* --------- ---------- ----------------------------------
+*
+* </pre>
+*
+* @author Matt Scott
+* @version 1.0
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +34,7 @@ namespace HashMap
 
             HashMap<StringKey, Item> hashMap = new HashMap<StringKey, Item>(5);
 
+            // Load lines from Item data into hash mao
             foreach(string line in lines)
             {
                 string[] lineSplit = line.Split(',');
@@ -24,6 +44,7 @@ namespace HashMap
                 hashMap.Put(key, value);
             }            
 
+            // Remove items that have 0 gold pieces
             foreach (StringKey key in hashMap.Keys())
             {
                 Item item = hashMap.Get(key);
@@ -38,6 +59,7 @@ namespace HashMap
             List<Item> items = new List<Item>();
             double weight = 0;
 
+            // Iterate through each list item and perform different actions
             for(int i = 0; i < loot.Length; i++)
             {
                 bool found = false;
@@ -45,11 +67,13 @@ namespace HashMap
 
                 foreach(StringKey key in hashMap.Keys())
                 {
+                    // Determine if the loot items exists in the hash map
                     if(loot[i].Equals(key.ToString()))
                     {
                         found = true;
                         Item foundItem = hashMap.Get(key);  
 
+                        // Determine if it is possible to add the item to your backpack otherwise print out that you're unable to and raise the capacity flag
                         if((weight + foundItem.GetWeight()) <= 75)
                         {
                             Console.WriteLine("You have picked up a " + loot[i] + "!");                            
@@ -65,6 +89,7 @@ namespace HashMap
                     }
                 }
 
+                // If item wasn't found in the hash map print out that it wasn't found
                 if(!found)
                 {
                     Console.WriteLine("You find an unknown item that is not in your loot table, you leave it alone. " + loot[i]);
@@ -76,6 +101,7 @@ namespace HashMap
 
                     Console.WriteLine("You must sell the following items:");
 
+                    // Iterate through items list, calculate and duplicate items and print out contents
                     foreach(Item item in items.ToList())
                     {
                         int itemQuantity = items.Where(x => x.GetName() == item.GetName()).Count();

@@ -1,4 +1,23 @@
-﻿using System;
+﻿/**
+* HashMap – Constructor for HashMap as well as supporting methods. Item inherits from IMap. Has inner class entry. 
+*
+* <pre>
+*
+* Assignment: #4
+* Course: ADEV-3001
+* Date Created: November 27, 2017
+* 
+* Revision Log
+* Who        When       Reason
+* --------- ---------- ----------------------------------
+*
+* </pre>
+*
+* @author Matt Scott
+* @version 1.0
+*/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
